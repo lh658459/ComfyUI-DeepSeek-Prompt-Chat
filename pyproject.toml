@@ -1,0 +1,16 @@
+[project]
+name = "deepseek-prompt-chat"
+version = "1.4.1"
+description = "Multi-session DeepSeek prompt chat for ComfyUI, with TXT knowledge retrieval, bilingual prompt tags, and confirmed English prompt output."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["aiohttp>=3.9,<4"]
+
+[project.urls]
+Repository = "https://github.com/lh658459/ComfyUI-DeepSeek-Prompt-Chat"
+Documentation = "https://github.com/lh658459/ComfyUI-DeepSeek-Prompt-Chat#readme"
+"Bug Tracker" = "https://github.com/lh658459/ComfyUI-DeepSeek-Prompt-Chat/issues"
+
+[tool.comfy]
+PublisherId = "bridow"
+DisplayName = "DeepSeek Prompt Chat"
