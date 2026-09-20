@@ -1,0 +1,498 @@
+{
+  "id": "09f31fcf-27a7-4d58-b310-f780050a9c27",
+  "revision": 0,
+  "last_node_id": 17,
+  "last_link_id": 11,
+  "nodes": [
+    {
+      "id": 16,
+      "type": "DeepSeekPromptChat",
+      "title": "01 · 和 DeepSeek 对话 → 确认后出图",
+      "pos": [
+        40,
+        110
+      ],
+      "size": [
+        480,
+        330
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "已确认提示词",
+          "type": "STRING",
+          "links": [
+            1,
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DeepSeekPromptChat",
+        "dsChat": {
+          "model": "deepseek-v4-flash",
+          "messages": [],
+          "candidate": ""
+        }
+      },
+      "widgets_values": [
+        "",
+        false
+      ]
+    },
+    {
+      "id": 4,
+      "type": "PreviewAny",
+      "title": "已确认的最终提示词",
+      "pos": [
+        40,
+        550
+      ],
+      "size": [
+        430,
+        260
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "CheckpointLoaderSimple",
+      "title": "04 · 本地 Rin Flanime Illustrious",
+      "pos": [
+        590,
+        110
+      ],
+      "size": [
+        370,
+        120
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "rinFlanimeIllustrious_v30.safetensors"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "title": "05 · 正向提示词（自动接入）",
+      "pos": [
+        590,
+        330
+      ],
+      "size": [
+        370,
+        180
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 2,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "title": "06 · 负向提示词",
+      "pos": [
+        590,
+        570
+      ],
+      "size": [
+        370,
+        190
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "worst quality, low quality, blurry, bad anatomy, bad hands, extra fingers, missing fingers, extra limbs, distorted face, watermark, signature, text, logo"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "EmptyLatentImage",
+      "title": "07 · 图片尺寸",
+      "pos": [
+        590,
+        830
+      ],
+      "size": [
+        370,
+        140
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        832,
+        1216,
+        1
+      ]
+    },
+    {
+      "id": 9,
+      "type": "KSampler",
+      "title": "08 · 本地采样",
+      "pos": [
+        1040,
+        330
+      ],
+      "size": [
+        320,
+        300
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 7
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        20260920,
+        "fixed",
+        28,
+        5.5,
+        "dpmpp_2m",
+        "karras",
+        1.0
+      ]
+    },
+    {
+      "id": 10,
+      "type": "VAEDecode",
+      "title": "09 · 解码图片",
+      "pos": [
+        1460,
+        330
+      ],
+      "size": [
+        240,
+        100
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 9
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 11,
+      "type": "SaveImage",
+      "title": "10 · 保存并预览图片",
+      "pos": [
+        1790,
+        330
+      ],
+      "size": [
+        430,
+        500
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "DeepSeek_RinFlanime/ComfyUI"
+      ]
+    },
+    {
+      "id": 17,
+      "type": "Note",
+      "title": "使用方法",
+      "pos": [
+        40,
+        880
+      ],
+      "size": [
+        480,
+        250
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "properties": {},
+      "widgets_values": [
+        "1. 点击“打开 DeepSeek 连续对话”。\n2. 输入官方 API Key，选择 Flash 或 Pro。\n3. 连续聊天修改画面，右侧随时预览、编辑提示词。\n4. 满意后点击“确认并生成图片”。聊天不会触发图片生成。\n\n对话记录随工作流保存；密钥仅当前页面会话保留，刷新后重新输入。可在本机 .env 配置 DEEPSEEK_API_KEY。图片由本地 RinFlanime checkpoint 生成。"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      16,
+      0,
+      4,
+      0,
+      "STRING"
+    ],
+    [
+      2,
+      16,
+      0,
+      6,
+      1,
+      "STRING"
+    ],
+    [
+      3,
+      5,
+      1,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      5,
+      1,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      5,
+      0,
+      9,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      6,
+      0,
+      9,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      7,
+      7,
+      0,
+      9,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      8,
+      8,
+      0,
+      9,
+      3,
+      "LATENT"
+    ],
+    [
+      9,
+      9,
+      0,
+      10,
+      0,
+      "LATENT"
+    ],
+    [
+      10,
+      5,
+      2,
+      10,
+      1,
+      "VAE"
+    ],
+    [
+      11,
+      10,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.55,
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  "version": 0.4
+}

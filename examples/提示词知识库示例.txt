@@ -1,0 +1,11 @@
+主题：海边 日落 逆光
+适用：动漫人物站在海边，暖色夕阳与轮廓光。
+提示词：ocean, beach, sunset, golden hour, backlighting, rim light, wind swept hair
+
+主题：森林 月光 夜景
+适用：安静的森林夜景，冷色调与柔和月光。
+提示词：forest, night, moonlight, cool colors, soft lighting, glowing fireflies
+
+主题：全身 构图 人物
+适用：完整展示人物与服装，避免裁掉脚部。
+提示词：full body, standing, feet in frame, detailed outfit, balanced composition
